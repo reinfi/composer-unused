@@ -22,8 +22,8 @@ class JUnitFormatter implements OutputFormatterInterface
     ): int {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>';
 
-        $totalFailuresCount = count($unusedDependencyCollection) + count($filterCollection->getUnused());
-        $totalTestsCount = $totalFailuresCount + count($ignoredDependencyCollection);
+        $totalFailuresCount = count($unusedDependencyCollection) + count($filterCollection);
+        $totalTestsCount = $totalFailuresCount;
 
         $xml .= sprintf(
             '<testsuite failures="%d" name="composer-unused" tests="%d" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/junit-team/junit5/r5.5.1/platform-tests/src/test/resources/jenkins-junit.xsd">',
@@ -35,14 +35,6 @@ class JUnitFormatter implements OutputFormatterInterface
             $xml .= '<testcase name="unused-dependencies">';
             foreach ($unusedDependencyCollection as $dependency) {
                 $xml .= sprintf('<failure type="ERROR" message="%s" />', $this->escape($dependency->getName()));
-            }
-            $xml .= '</testcase>';
-        }
-
-        if (count($ignoredDependencyCollection) > 0) {
-            $xml .= '<testcase name="ignored-dependencies">';
-            foreach ($ignoredDependencyCollection as $dependency) {
-                $xml .= sprintf('<failure type="WARNING" message="%s" />', $this->escape($dependency->getName()));
             }
             $xml .= '</testcase>';
         }
